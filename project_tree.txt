@@ -1,0 +1,70 @@
+zinny-webui
+├── CONTRIBUTING.md
+├── LICENSE
+├── README.md
+├── environment-dev.yml
+├── environment.yml
+├── project_tree.txt
+├── pyinstaller
+│   ├── hooks
+│   └── spec_files
+├── pyproject.toml
+├── pytest.ini
+├── requirements-dev.txt
+├── requirements.txt
+├── setup.py
+├── src
+│   ├── main.py
+│   ├── zinny.egg-info
+│   │   ├── PKG-INFO
+│   │   ├── SOURCES.txt
+│   │   ├── dependency_links.txt
+│   │   ├── entry_points.txt
+│   │   ├── requires.txt
+│   │   └── top_level.txt
+│   └── zinny_webui
+│       ├── __init__.py
+│       ├── config.py
+│       ├── routes
+│       │   ├── __init__.py
+│       │   └── errors.py
+│       ├── static
+│       │   ├── css
+│       │   │   ├── bootstrap-*
+│       │   │   ├── fonts
+│       │   │   └── styles.css
+│       │   ├── js
+│       │   │   ├── bootstrap.*.js
+│       │   │   ├── jszip.min.js
+│       │   │   ├── zinny.common.js
+│       │   │   ├── zinny.header_bar.js
+│       │   │   ├── zinny.screen_select.js
+│       │   │   ├── zinny.survey_select.js
+│       │   │   └── zinny.title_select.js
+│       ├── templates
+│       │   ├── 404.html
+│       │   ├── 500.html
+│       │   ├── about.html
+│       │   ├── layouts
+│       │   │   ├── base-component.html
+│       │   │   └── base.html
+│       │   ├── partials
+│       │   │   ├── footer.html
+│       │   │   ├── header_bar.html
+│       │   │   ├── screen_select.html
+│       │   │   ├── survey_select.html
+│       │   │   └── title_select.html
+│       │   └── surveys
+│       │       └── survey_page.html
+│       └── views
+│           ├── about.py
+│           ├── base.py
+│           └── survey.py
+├── tests
+│   ├── __init__.py
+│   ├── data_samples.py
+│   ├── test_init.py
+│   ├── test_views.py
+│   └── util_db_helpers.py
+├── zinny-webui.py
+└── zinny_app.code-workspace
