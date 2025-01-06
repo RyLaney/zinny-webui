@@ -37,20 +37,20 @@ Zinny-webui is the frontend interface for interacting with the Zinny system. It 
    ```
 
 ## Running the Web UI
-1. Ensure the `zinny-api` server is running. By default, it should be available at http://127.0.0.1:5219.
+1. Ensure the `zinny-api` server is running. By default, it should be available at http://127.0.0.1:7219.
 
 2. Run the web interface:
    ```bash
    python zinny-webui.py
    ```
 
-The application will automatically open in your default web browser. If not, navigate to `http://127.0.0.1:5219`.
+The application will automatically open in your default web browser. If not, navigate to `http://127.0.0.1:7219`.
 
 ### Optional Flags
 - `--no-launch-browser`: Prevents automatically opening the browser.
-- `--port [PORT]`: Specifies a custom port (default: 5219).
+- `--port [PORT]`: Specifies a custom port (default: 7219).
 
 Example:
    ```bash
-   python zinny-webui.py --port 5219 --no-launch-browser
+   python zinny-webui.py --port 7219 --no-launch-browser
    ```

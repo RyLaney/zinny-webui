@@ -10,7 +10,7 @@ Zinny Web UI provides a straightforward browser-based interface for rating films
 3. Start the server:
    `python zinny-webui.py`
 4. Access the interface at:
-   `http://127.0.0.1:5219`
+   `http://127.0.0.1:7219`
 
 
 ## Installation Details
@@ -24,6 +24,7 @@ We welcome contributions! If you'd like to report an issue, suggest a feature, o
 
 ## Acknowledgements
 - [Flask](https://flask.palletsprojects.com/en/1.1.x/) for the API framework.
+- [Bootstrap](https://getbootstrap.com/) for the front-end styling.
 - [PyInstaller](https://www.pyinstaller.org/) for building executables.
 - [Platypus](https://github.com/sveinbjornt/Platypus) for creating macOS app bundles.
 - Special thanks to [IMDb](https://www.imdb.com) for being the standard reference for movie and TV data. While no IMDb data is used directly, title information may coincide with their dataset.
