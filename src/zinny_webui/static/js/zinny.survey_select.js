@@ -100,7 +100,18 @@ const SurveySelect = (function() {
             }
     
             const surveyDetails = await surveyResponse.json();
-            const criteria = JSON.parse(surveyDetails.criteria);
+            const surveyDefaults = surveyDetails.defaults || {};
+            systemDefaultMarkers = {
+                "1": "Substandard",
+                "5": "Typical",
+                "10": "Exceptional",
+            }
+
+            const criteria = JSON.parse(surveyDetails.criteria).map((criterion) => {
+                // Apply defaults if markers are not explicitly set for the criterion
+                criterion.markers = criterion.markers || surveyDefaults.markers || systemDefaultMarkers;
+                return criterion;
+            });
             const survey_name = surveyDetails.name;
 
             // Update state
@@ -332,7 +343,21 @@ const SurveySelect = (function() {
         const valueDisplay = addUniqueID(card, "criterion-value-display", criterion.id);
         const clearButton = addUniqueID(card, "criterion-value-clear", criterion.id);
 
-        // Populate initial values from state
+        // Populate markers dynamically
+        const markers = criterion.markers || {};
+        const rangeLabels = card.querySelector(".range-labels");
+        rangeLabels.innerHTML = ""; // Clear existing labels
+        const minMarker = markers["1"] || "";
+        const midMarker = markers["5"] || "";
+        const maxMarker = markers["10"] || "";
+
+        rangeLabels.innerHTML = `
+            <span>${minMarker}</span>
+            <span>${midMarker}</span>
+            <span>${maxMarker}</span>
+        `;
+
+        // Populate initial values from state and attach event handlers
         const existingValue = state.ratings[criterion.id] || "";
         rangeInput.value = existingValue;
         valueDisplay.value = existingValue;
