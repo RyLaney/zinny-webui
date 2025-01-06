@@ -14,8 +14,8 @@ def main():
     parser.add_argument(
         "--port",
         type=int,
-        default=int(os.getenv("ZINNY_PORT", "5219")),
-        help="Port number to run the server (default: 5219 or environment variable ZINNY_PORT)."
+        default=int(os.getenv("ZINNY_PORT", "7219")),
+        help="Port number to run the server (default: 7219 or environment variable ZINNY_PORT)."
     )
     parser.add_argument(
         "--no-browser",
