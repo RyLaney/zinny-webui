@@ -9,6 +9,10 @@ install:
 	$(MAKE) uninstall
 	python -m pip install --upgrade .
 
+install-e:
+	$(MAKE) uninstall
+	python -m pip install -e .
+
 uninstall:
 	python -m pip uninstall -y zinny-webui
 
@@ -46,6 +50,11 @@ tag:
 
 print-version:
 	@echo $(VERSION)
+
+pyinstaller:
+	rm -r pyinstaller/build pyinstaller/dist
+	pyinstaller     --distpath pyinstaller/dist     --workpath pyinstaller/build     pyinstaller/spec_files/zinny-webui.spec
+
 
 cbir:
 	$(MAKE) clean
