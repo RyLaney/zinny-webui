@@ -351,3 +351,7 @@ compile_commands.json
 
 # Cold Storge
 _attic
+
+
+# Platypus - manually include any necessary files individually
+platypus

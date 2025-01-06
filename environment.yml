@@ -11,5 +11,5 @@ dependencies:
   # pip dependencies
   - pip
   - pip:
-      - git+https://github.com/RyLaney/zinny-surveys.git
-      - git+https://github.com/RyLaney/zinny-api.git
+      - zinny-surveys
+      - zinny-api
