@@ -1,11 +1,12 @@
 """Main application file for the Zinny Flask server."""
 import os
+import importlib
 
 from flask import Flask
-from zinny_webui.routes.errors import errors_bp
-from zinny_webui.views.survey import survey_bp
-from zinny_webui.views.about import about_bp
-from zinny_webui.config import ZINNY_API_VERSION, ZINNY_WEBUI_VERSION
+from .routes.errors import errors_bp
+from .views.survey import survey_bp
+from .views.about import about_bp
+from .config import ZINNY_API_VERSION, ZINNY_WEBUI_VERSION
 
 
 # pylint: disable=import-outside-toplevel,line-too-long
@@ -19,12 +20,13 @@ def create_app():
     flask_app = zinny_api.create_app()
 
     # Resolve paths relative to this file
-    base_dir = os.path.dirname(os.path.abspath(__file__))
+    static_folder = importlib.resources.files("zinny_webui").joinpath("static")
+    template_folder = importlib.resources.files("zinny_webui").joinpath("templates")
 
     # Update static folder configuration for zinny_webui
     flask_app.static_url_path = "/static"
-    flask_app.static_folder = str(os.path.join(base_dir, "static"))
-    flask_app.template_folder = str(os.path.join(base_dir, "templates"))
+    flask_app.static_folder = str(static_folder)
+    flask_app.template_folder = str(template_folder)
     flask_app.config["WEBUI_TITLE"] = "Zinny WebUI"
 
     # Retrieve and inject version numbers
