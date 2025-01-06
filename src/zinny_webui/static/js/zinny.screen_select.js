@@ -6,15 +6,22 @@ async function fetchScreenTypes() {
             screen_types = data;
         })
         .catch((error) => {
-            console.error("Error fetching screen types:", error);
+            console.error("zinny: Error fetching screen types:", error);
         });
 }
 fetchScreenTypes();
 
 const ScreenSelect = (function() {
 
+    function handleScreenTypeChange(event) {
+        const clickedElement = event.target; // The input element triggering the event
+        const screenType = clickedElement.value; // The value of the clicked radio button
 
+        // Call your original function logic (or handle it inline here)
+        selectScreenType(screenType);
+        SurveySelect.debounceSaveSurvey(state);
 
+    }
 
     function showScreenOptions() {
         const screenOptionsContainer = document.getElementById("screen-types-container");
@@ -23,7 +30,6 @@ const ScreenSelect = (function() {
         screenOptionsContainer.classList.remove("d-none");
         screenOptionsContainer.innerHTML = ``;
         screenOptionsContainer.appendChild(template);
-
     }
 
     function hideScreenOptions() {
@@ -61,22 +67,6 @@ const ScreenSelect = (function() {
         // Sync initial state
         prefillScreenType();
     }
-    
-
-    // // Toggles the edit view for "Screen Type"
-    // function toggleViewedOnEdit() {
-    //     const options = document.getElementById("screen-types");
-    //     const editButton = document.getElementById("screen-types-edit-button");
-
-    //     if (options.style.display === "none") {
-    //         editButton.innerHTML = `<i class="bi bi-chevron-up"></i>`;
-    //         options.style.display = "flex";
-    //     } else {
-    //         editButton.classList.remove("d-none");
-    //         editButton.innerHTML = `<i class="bi bi-pencil"></i>`;
-    //         options.style.display = "none";
-    //     }
-    // }
 
 
     // Updates the selected "Screen Type" value
@@ -91,10 +81,6 @@ const ScreenSelect = (function() {
     }
 
     function selectScreenTypeFromId(screen_type_id) {
-        // console.log("Selecting screen type from id:", screen_type_id);
-        // const options = document.getElementById("screen-types");
-        // const editButton = document.getElementById("screen-types-edit-button");
-
         // check against current state and update if needed
         if (state.screen_type_id == screen_type_id) {
             return;
@@ -109,32 +95,28 @@ const ScreenSelect = (function() {
         }
         state.screen_type = screen_type_type
         state.screen_type_id = screen_type_id;
-        // editButton.classList.remove("d-none");
-        // options.style.display = "none";
-        // console.log("Selected screen type:", screen_type_type);
+        // is there is a selected survey, flag as changed
+        if (state.survey_id) {  // assumes title_id if we can edit screen type
+            state.ratings_changed = true;
+            SurveySelect.enableSaveButtonState(true);
+        }
         updateViewedOn(screen_type_id)
-        // updateViewedOn(screen_type_type)
-        
         
     }
 
     function updateViewedOn(screen_type_id) {
-        // console.log("Updating viewed on screen type:", screen_type_id);
         const screenTypeValue = document.getElementById("screen-type-value");
-        // console.log("Screen type value:", screenTypeValue);
 
         // lookup scren_type.type from screen_types
         for (const [key, value] of Object.entries(screen_types)) {
             if (value.id == screen_type_id) {
                 display_name = value.display_name;
                 screen_type_type = value.type;
-                // console.log("Screen type type:", screen_type_type);
-                // console.log("Display name:", display_name);
             }
         }
 
         // display_name = screen_types[screen_type_id].display_string;
-        screenTypeValue.innerHTML = `<span>Viewed on ${display_name}</span>`;
+        screenTypeValue.innerHTML = `<span>Viewed on a ${display_name}</span>`;
 
         const screenTypesSelector = document.querySelectorAll('input[name="screen-type-selector"]');
         screenTypesSelector.forEach((option) => {
@@ -157,6 +139,9 @@ const ScreenSelect = (function() {
     }
     
     return {
+        // used in HTML:
+        handleScreenTypeChange,
+        // Used in other js files:
         clearScreenOptions,
         prefillScreenType,
         selectScreenType,

@@ -89,7 +89,7 @@ const TitleSelect = (function() {
             if (!response.ok) throw new Error("Failed to fetch title types.");
             return await response.json();
         } catch (error) {
-            console.error("Error fetching title types:", error);
+            console.error("zinny: Error fetching title types:", error);
             return [];
         }
     }
@@ -231,7 +231,7 @@ const TitleSelect = (function() {
                 }
             }
         } catch (error) {
-            console.error("Error fetching titles:", error);
+            console.error("zinny: Error fetching titles:", error);
             titleSearchResults.innerHTML = `
                 <li class="list-group-item text-danger">Failed to load results. Please try again.</li>
                 <li>`+ error + `</li>
@@ -258,9 +258,12 @@ const TitleSelect = (function() {
 
         // Replace search bar with selected title display
         titleInputGroup.innerHTML = `
-            <div class="form-control bg-light">${selectedTitle.name} (${selectedTitle.year})</div>
             <button id="title-edit-button" class="btn btn-secondary was-btn-outline" onclick="TitleSelect.resetTitleSearch()">
                 <i id="title-edit-button" class="bi bi-pencil"></i>
+            </button>
+            <div class="form-control bg-light">${selectedTitle.name} (${selectedTitle.year})</div>
+            <button id="title-avg-rating" class="btn btn-secondary was-btn-outline disabled">
+                --
             </button>
         `;
 
@@ -268,22 +271,25 @@ const TitleSelect = (function() {
         titleSearchResults.innerHTML = ''; // Clear previous results
         updateResultsVisibility();
 
-        // updateFilters();
         hideFilters();
 
         state.title_id = selectedTitle.id;
+        state.ratings_changed = false; // false for intial load
+
         // update ratings and screen_type with existing values
         ScreenSelect.showScreenOptions();
         await fetchAndApplyRatings();
 
         // Update the screen type selector from state
         await ScreenSelect.prefillScreenType();
-        // SurveySelect.showCriteriaList();
         SurveySelect.setCriteriaEditable(true)
         
         // select the survey if one is in the state
         if (state.survey_id) {
             SurveySelect.selectSurvey(state.survey_id);
+            SurveySelect.enableSaveButtonState(false, "loaded");
+        } else {
+            SurveySelect.enableSaveButtonState(false, "no_survey");
         }
 
     }
@@ -310,10 +316,13 @@ const TitleSelect = (function() {
             clearFilters();
         }
         HeaderBar.disableSaveButton();
+        state.title_id = null;
+        resetRatingsState({});
 
         SurveySelect.clearSurveyResponses();
         ScreenSelect.clearScreenOptions();
         SurveySelect.setCriteriaEditable(false)
+        SurveySelect.enableSaveButtonState(false, "no_title");
 
 
         updateFilters();
@@ -329,28 +338,25 @@ const TitleSelect = (function() {
         }
     };
 
-
-    function showAddTitle() {
-        // Logic to open "Add Title" modal
+    function updateScore(score) {
+        score_button = document.getElementById("title-avg-rating");
+        score_button.textContent = score
     }
 
     return {
+        // used in HTML:
         clearFilters,
-        // handleFilterToggle,
-        handleFilterKey,
-        hideFilters,
-        resetTitleSearch,
-        searchTitles,
-        selectTitle,
-        showAddTitle,
         toggleFilters,
         toggleFilterLock,
-        updateFilters,
+        // used by other js files:
+        resetTitleSearch,
+        searchTitles,
+        updateScore,
+        // private:
+        // handleFilterKey,
+        // hideFilters,
+        // selectTitle,
+        // updateFilters,
     };
 })();
 
-// document.addEventListener("DOMContentLoaded", TitleSelect.searchTitles);
-
-// document.addEventListener("DOMContentLoaded", function() {
-//     resetTitleSearch();
-// });

@@ -6,15 +6,22 @@ const state = {
     survey_id: null,
     screen_type: null,
     ratings: {}, // Keyed by criterion name, e.g., { "acting_skill": "8" }
+    ratings_changed: false,
+    score: "--",
 };
+
+function resetRatingsState(ratings) {
+    state.ratings = ratings;
+    state.ratings_changed = false;
+}
 
 async function fetchAndApplyRatings() {
     const titleId = state.title_id || null;
     const surveyId = state.survey_id || null;
 
     if (!titleId || !surveyId) {
-        // console.warn("Title or survey not selected. Skipping fetch and apply ratings.");
-        state.ratings = {}; // Default to empty ratings
+        ratings = {}; // Default to empty ratings
+        resetRatingsState(ratings);
         return;
     }
 
@@ -24,26 +31,28 @@ async function fetchAndApplyRatings() {
             const existingRatings = await ratingsResponse.json();
             if (existingRatings == {}) {
                 state.ratings = {}; // Default to empty ratings
-                console.warn("No ratings found for this survey-title combination.");
+                console.warn("zinny: No ratings found for this survey-title combination.");
             } else {
                 if (existingRatings.screen_type_id) {
                     ScreenSelect.selectScreenTypeFromId(existingRatings.screen_type_id);
                 }
-                state.ratings = existingRatings.ratings || {};
+                ratings = existingRatings.ratings || {};
+                resetRatingsState(ratings);
             }
         } else {
             throw new Error(`Failed to fetch ratings: ${ratingsResponse.status}`);
         }
     } catch (error) {
-        console.error("Error fetching ratings:", error);
-        state.ratings = {}; // Default to empty ratings on error
+        console.error("zinny: Error fetching ratings:", error);
+        ratings = {}; // Default to empty ratings on error
+        resetRatingsState(ratings);
     }
-    // console.log("Ratings:", state.ratings);
+    state.ratings_changed = false; // false for intial load
 }
 
 
 document.addEventListener("resetCriteria", () => {
-    console.log("WARNING: Criteria values reset not implemented yet");
+    console.warn("zinny: WARNING: Criteria values reset not implemented yet");
 });
 
 
@@ -57,10 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
     SurveySelect.setCriteriaEditable(false);
     ScreenSelect.setupScreenTypeSelector();
 
-    // Initialize Save Button
-    const saveButton = document.getElementById("save-ratings-button");
-    saveButton.addEventListener("click", SurveySelect.saveSurveyResponses);
-
+    
     // Initialize Survey Filters
     const filterOptions = document.getElementById("survey-filter-options");
     const filtersContainer = document.getElementById("survey-filters-container");
@@ -83,4 +89,3 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
 });
-

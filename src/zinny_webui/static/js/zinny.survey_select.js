@@ -42,9 +42,9 @@ const SurveySelect = (function() {
 
             surveys.forEach((survey) => {
                 surveysList.appendChild(createSurveyCard(survey));
-            });
+            });            
         } catch (error) {
-            console.error("Error fetching surveys:", error);
+            console.error("zinny: Error fetching surveys:", error);
             surveysList.innerHTML = `
                 <li class="list-group-item text-danger">Failed to load surveys. Please try again.</li>
             `;
@@ -84,7 +84,7 @@ const SurveySelect = (function() {
                 });
             }
         } catch (error) {
-            console.error("Error fetching surveys:", error);
+            console.error("zinny: Error fetching surveys:", error);
             surveysList.innerHTML = `
                 <li class="list-group-item text-danger">Failed to load surveys. Please try again.</li>
             `;
@@ -103,8 +103,6 @@ const SurveySelect = (function() {
             const criteria = JSON.parse(surveyDetails.criteria);
             const survey_name = surveyDetails.name;
 
-
-
             // Update state
             state.survey_id = survey_id;
             // update state ratings and screen_type with existing values
@@ -116,10 +114,10 @@ const SurveySelect = (function() {
             // Replace search bar with selected survey display
             const searchBar = document.getElementById("survey-input-group");
             searchBar.innerHTML = `
-                <div class="form-control bg-light">${survey_name}</div>
-                <button class="btn btn-secondary was-btn-outline" onclick="SurveySelect.resetSurveySearch()">
+                <button class="btn btn-secondary was-btn-outline" onclick="SurveySelect.handleEditButtonClick()">
                     <i class="bi bi-pencil"></i>
                 </button>
+                <div class="form-control bg-light">${survey_name}</div>
             `;
             searchBar.classList.add("survey-selected");
             // Clear search results and display criteria
@@ -135,10 +133,20 @@ const SurveySelect = (function() {
                 criteriaList.appendChild(card);
             });
             criteriaList.classList.remove("d-none");
-    
+
+            state.ratings_changed = false; // No changes after loading
+
+            state.score = calculateScore(state.ratings);
+            TitleSelect.updateScore(state.score);
+
+            if (state.title_id) {
+                enableSaveButtonState(false, "loaded");
+            } else {
+                enableSaveButtonState(false, "no_title");
+            }
 
         } catch (error) {
-            console.error("Error selecting survey:", error);
+            console.error("zinny: Error selecting survey:", error);
         }
     }
     
@@ -220,35 +228,6 @@ const SurveySelect = (function() {
         }
     }
 
-
-    function setupCriterionInteractions(rangeInput, valueDisplay, clearButton) {
-    
-        // Sync range and input
-        rangeInput.addEventListener("input", () => {
-            valueDisplay.value = rangeInput.value;
-            updateThumbStyle();
-        });
-    
-        valueDisplay.addEventListener("input", () => {
-            const value = parseInt(valueDisplay.value, 10);
-            if (!isNaN(value) && value >= 1 && value <= 10) {
-                rangeInput.value = value;
-            } else {
-                rangeInput.value = "";
-            }
-            updateThumbStyle();
-        });
-    
-        // Clear values on clear button click
-        clearButton.addEventListener("click", () => {
-            rangeInput.value = "";
-            valueDisplay.value = "";
-            updateThumbStyle(valueDisplay, rangeInput);
-        });
-    
-        // Initialize thumb style
-        updateThumbStyle(valueDisplay, rangeInput);
-    }
     
     let criterionIdCounter = 0;
 
@@ -319,132 +298,6 @@ const SurveySelect = (function() {
     }
     
 
-    // function createCriterionCard(criterion, existingRatings) {
-    //     const template = document.getElementById("criterion-card-template");
-    //     const card = template.content.cloneNode(true);
-    
-    //     // Generate unique IDs
-    //     const rangeId = createUniqueId("criterion-range");
-    //     const valueDisplayId = createUniqueId("criterion-value-display");
-    //     const clearButtonId = createUniqueId("criterion-value-clear");
-    
-    //     // Update IDs in the card
-    //     const rangeInput = card.querySelector("#criterion-range");
-    //     const valueDisplay = card.querySelector("#criterion-value-display");
-    //     const clearButton = card.querySelector("#criterion-value-clear");
-    
-    //     rangeInput.id = rangeId;
-    //     valueDisplay.id = valueDisplayId;
-    //     clearButton.id = clearButtonId;
-    
-    //     // Add classes to the inputs
-    //     rangeInput.classList.add("criterion-range");
-    //     valueDisplay.classList.add("criterion-value-display");
-    
-    //     // Pre-fill values if available
-    //     if (existingRatings && existingRatings.ratings) {
-
-    //         // Parse encoded ratings if necessary
-    //         let parsedRatings;
-    //         try {
-    //             parsedRatings = typeof existingRatings.ratings === "string"
-    //                 ? JSON.parse(existingRatings.ratings)
-    //                 : existingRatings.ratings;
-    //         } catch (error) {
-    //             console.error("Failed to parse ratings:", error);
-    //         }
-
-    //         const existingValue = parsedRatings ? parsedRatings[rangeId] : null;
-    //         if (existingValue) {
-    //             rangeInput.value = existingValue;
-    //             valueDisplay.value = existingValue;
-    //         }
-    //     }
-    
-    //     // Set up interactions
-    //     setupCriterionInteractions(rangeInput, valueDisplay, clearButton);
-    
-    //     // Event listeners for manual updates
-    //     rangeInput.addEventListener("input", () => {
-    //         valueDisplay.value = rangeInput.value;
-    //     });
-    
-    //     valueDisplay.addEventListener("focus", () => {
-    //         valueDisplay.select(); // Automatically selects the text
-    //     });
-    
-    //     valueDisplay.addEventListener("input", () => {
-    //         const value = parseInt(valueDisplay.value, 10);
-    
-    //         // Validate input
-    //         if (!isNaN(value)) {
-    //             if (value < 1) {
-    //                 value = 1;
-    //             } else if (value > 10) {
-    //                 value = 10;
-    //             }
-    //             valueDisplay.value = value; // Update display if clamped
-    //             rangeInput.value = value; // Update slider if valid
-    //         } else {
-    //             valueDisplay.value = ""; // Reset invalid input
-    //             rangeInput.value = ""; // Reset slider
-    //         }
-    //     });
-    
-    //     clearButton.addEventListener("click", () => {
-    //         rangeInput.value = ""; // Reset slider
-    //         valueDisplay.value = ""; // Clear display
-    //     });
-    
-    //     // Update other card content
-    //     const title = card.querySelector(".text-truncate");
-    //     title.textContent = criterion.name;
-    
-    //     const infoButton = card.querySelector(".btn-link");
-    //     infoButton.addEventListener("click", () => {
-    //         showCriterionInfo(criterion);
-    //     });
-    
-    //     return card;
-    // }
-    
-
-    // function createCriterionCard(criterion, existingRatings) {
-    //     const template = document.getElementById("criterion-card-template");
-    //     const card = template.content.cloneNode(true);
-    
-    //     // Set criterion name as a data attribute
-    //     const cardElement = card.querySelector(".card");
-    //     cardElement.setAttribute("data-criterion-name", criterion.name);
-    //     cardElement.setAttribute("data-criterion-id", criterion.id);
-    
-    //     // Generate unique IDs
-    //     const rangeId = createUniqueId("criterion-range");
-    //     const valueDisplayId = createUniqueId("criterion-value-display");
-    //     const clearButtonId = createUniqueId("criterion-value-clear");
-    
-    //     // Update IDs in the card
-    //     const rangeInput = card.querySelector("#criterion-range");
-    //     const valueDisplay = card.querySelector("#criterion-value-display");
-    //     const clearButton = card.querySelector("#criterion-value-clear");
-    
-    //     rangeInput.id = rangeId;
-    //     valueDisplay.id = valueDisplayId;
-    //     clearButton.id = clearButtonId;
-    
-    //     // Pre-fill values if available
-    //     if (existingRatings && existingRatings.ratings) {
-    //         const existingValue = existingRatings.ratings[criterion.name];
-    //         if (existingValue) {
-    //             rangeInput.value = existingValue;
-    //             valueDisplay.value = existingValue;
-    //         }
-    //     }
-    
-
-    //     return card;
-    // }
-
     function clampValue(value, min=1, max=10) {
         // Validate input
         if (!isNaN(value)) {
@@ -460,7 +313,6 @@ const SurveySelect = (function() {
     function addUniqueID(DOMObject, genericId, id) {
         const uniqueID = createUniqueId(genericId, id);
         const element = DOMObject.querySelector(`#${genericId}`);
-        // console.log("Element:", element);
         element.id = uniqueID;
         element.classList.add(genericId);
         return element;
@@ -484,6 +336,7 @@ const SurveySelect = (function() {
         const existingValue = state.ratings[criterion.id] || "";
         rangeInput.value = existingValue;
         valueDisplay.value = existingValue;
+        state.ratings[criterion.id] = existingValue;
 
         if (existingValue) {
             rangeInput.classList.add("filled");
@@ -497,6 +350,8 @@ const SurveySelect = (function() {
         clearButton.addEventListener("click", () => {
             rangeInput.value = ""; // Reset slider
             valueDisplay.value = ""; // Clear display
+            // reset thumb style to indicate no value
+            updateThumbStyle(valueDisplay, rangeInput);
         });
     
         // Update other card content
@@ -508,102 +363,114 @@ const SurveySelect = (function() {
             showCriterionInfo(criterion, event);
         });
         
-
-        // Update state on interaction
         rangeInput.addEventListener("input", () => {
             const value = rangeInput.value;
-            state.ratings[criterion.id] = value; // Update state
-            valueDisplay.value = value; // Sync display
+
+            state.ratings[criterion.id] = value;
+            valueDisplay.value = value; // Sync text display
+            enableSaveButtonState(true);
             updateThumbStyle(valueDisplay, rangeInput);
+            state.ratings_changed = true;
+            debounceSaveSurvey(state);
+            state.score = calculateScore(state.ratings);
+            TitleSelect.updateScore(state.score);
 
         });
     
         valueDisplay.addEventListener("input", () => {
-            const value = valueDisplay.value;
-            state.ratings[criterion.id] = value; // Update state
+            const value = clampValue(valueDisplay.value, min=1, max=10);
+
+            state.ratings[criterion.id] = value;
             rangeInput.value = value; // Sync slider
+            enableSaveButtonState(true);
             updateThumbStyle(valueDisplay, rangeInput);
+            state.ratings_changed = true;
+            debounceSaveSurvey(state);
+            state.score = calculateScore(state.ratings);
+            TitleSelect.updateScore(state.score);
         });
     
         return card;
     }
     
-    
-    // async function saveSurveyResponses() {
-    //     // Ensure required state values are set
-    //     if (!state.title_id || !state.survey_id) {
-    //         console.error("Title ID and Survey ID are required to save responses.");
-    //         return;
-    //     }
+    let saveSurveyTimer = null;
 
-    //     // Collect survey responses from criteria inputs    
-    //     const criteriaList = document.querySelectorAll(".criterion-card");
-    //     const ratings = {};
-    
-    //     criteriaList.forEach((card) => {
-    //         // const criterionName = card.getAttribute("data-criterion-name");
-    //         const criterionId = card.getAttribute("data-criterion-id");
-    //         const rangeInput = card.querySelector(".criterion-range");
-    //         const valueDisplay = card.querySelector(".criterion-value-display");
-    //         ratings[criterionId] = valueDisplay.value || null; // Save value or null if unset
-    //         console.log("Criterion ID:", criterionId, "Value:", valueDisplay.value);
-    //     });
-    
-    //     // TODO: add UI field input for comments
-    //     const commentsInput = document.getElementById("comments")
-    //     if (commentsInput) {
-    //         comments = commentsInput.value || ""; 
-    //     } else {
-    //         comments = "";
-    //     }
-    
-    //     console.log("State:", state);
-
-    //     const payload = {
-    //         title_id: state.title_id,
-    //         survey_id: state.survey_id,
-    //         ratings: ratings,
-    //         comments,
-    //         screen_type: state.screen_type || null,
-    //     };
-    //     try {
-    //         const response = await fetch("/api/v1/ratings/", {
-    //             method: "POST",
-    //             headers: {
-    //                 "Content-Type": "application/json",
-    //             },
-    //             body: JSON.stringify(payload),
-    //         });
-    
-    //         if (response.ok) {
-    //             const result = await response.json();
-    //             // console.log("Ratinga saved successfully:", result);
-    //             const saveStatus = document.getElementById("save-status");
-    //             HeaderBar.disableSaveButton();
-    //             // saveStatus.textContent = "All changes saved";
-    //             // saveStatus.style.color = "green";
-    //         } else {
-    //             const error = await response.json();
-    //             console.error("Error saving rating:", error);
-    //             const saveStatus = document.getElementById("save-status");
-    //             // saveStatus.textContent = "Failed to save changes";
-    //             // saveStatus.style.color = "red";
-    //         }
-    //     } catch (error) {
-    //         console.error("Error saving rating:", error);
-    //         const saveStatus = document.getElementById("save-status");
-    //         // saveStatus.textContent = "Failed to save changes";
-    //         // saveStatus.style.color = "red";
-    //     }
-    // }
-
-    async function saveSurveyResponses() {
+    async function handleSaveButtonClick() {
+        // debounceSaveSurvey(state);
         const payload = {
             title_id: state.title_id,
             survey_id: state.survey_id,
             screen_type: state.screen_type,
             ratings: state.ratings,
         };
+        // clear the debounce timer if it exists
+        if (saveSurveyTimer) clearTimeout(saveSurveyTimer);
+        await saveSurveyResponses(payload);
+        resetRatingsState(payload.ratings);
+        enableSaveButtonState(false, "saved");
+    }
+    function handleEditButtonClick() {
+        resetSurveySearch();
+    }
+    function handleSearchInput() {
+        surveySearch();
+    }
+
+
+    async function debounceSaveSurvey(proposedState) {
+        // const saveButton = document.getElementById("save-ratings-button");
+    
+        if (!proposedState.ratings_changed) {
+            console.info("zinny: Save called, but no changes to save.");
+            return;
+        }
+    
+        const payload = {
+            title_id: proposedState.title_id,
+            survey_id: proposedState.survey_id,
+            screen_type: proposedState.screen_type,
+            ratings: proposedState.ratings,
+        };
+    
+        if (saveSurveyTimer) clearTimeout(saveSurveyTimer);
+        saveSurveyTimer = setTimeout(async () => {
+            try {
+                await saveSurveyResponses(payload);
+                resetRatingsState(payload.ratings);
+                enableSaveButtonState(false, "auto_saved");
+            } catch (error) {
+                console.error("zinny: Error saving survey responses:", error);
+            }
+        }, 5246); // Debounce duration
+    }
+    
+    
+    function enableSaveButtonState(enable, label_key=null) {
+        const saveButtonMessages = {
+            "save": "Save Ratings",
+            "saved": "Saved",
+            "auto_saved": "Auto Saved",
+            "no_title": "No Title",
+            "loaded": "Loaded from DB",
+            "no_survey": "No Survey",
+        }
+
+        const disabled = !enable; // easier to read function call
+        const saveButton = document.getElementById("save-ratings-button");
+        saveButton.disabled = disabled;
+        if (disabled) {
+            saveButton.classList.add("disabled");
+            if (label_key == null) { label_key = "saved"; }
+            saveButton.querySelector("span").textContent = saveButtonMessages[label_key];
+        } else {
+            saveButton.classList.remove("disabled");
+            if (label_key == null) { label_key = "save"; }
+            saveButton.querySelector("span").textContent = saveButtonMessages[label_key];
+        }
+    }
+    
+    
+    async function saveSurveyResponses(payload) {
     
         try {
             const response = await fetch("/api/v1/ratings/", {
@@ -615,47 +482,76 @@ const SurveySelect = (function() {
             });
     
             if (response.ok) {
-                console.log("Survey responses saved successfully.");
+                console.info("zinny: Survey responses saved successfully.");
             } else {
-                console.error("Failed to save survey responses.");
+                console.error("zinny: Failed to save survey responses.");
             }
         } catch (error) {
-            console.error("Error saving survey responses:", error);
+            console.error("zinny: Error saving survey responses:", error);
         }
+    }
+    
+    function calculateScore(ratings) {
+        if (ratings == null) {
+            return "--";
+        }
+        if (Object.keys(ratings).length === 0) {
+            return "--";
+        }
+        const validRatings = Object.values(ratings)
+            .filter((value) => value !== "" && value !== null)
+            .map(Number); // Convert strings to numbers
+    
+        if (validRatings.length === 0) {
+            return null; // No valid ratings to calculate mean
+        }
+    
+        const sum = validRatings.reduce((acc, value) => acc + value, 0);
+        return sum / validRatings.length;
+    }
+    
+    function calcWeightedMean(ratings, weights) {
+        const validRatings = Object.entries(ratings)
+            .filter(([key, value]) => value !== "" && value !== null && weights[key] !== undefined)
+            .map(([key, value]) => ({ rating: Number(value), weight: weights[key] }));
+    
+        if (validRatings.length === 0) {
+            return null; // No valid ratings to calculate weighted mean
+        }
+    
+        const totalWeightedSum = validRatings.reduce((acc, { rating, weight }) => acc + rating * weight, 0);
+        const totalWeights = validRatings.reduce((acc, { weight }) => acc + weight, 0);
+    
+        score = totalWeightedSum / totalWeights;
+        state.score = score;
     }
     
 
     return {
-        createSurveyCard,
+        // used in HTML:
+        handleSearchInput,
+        handleEditButtonClick,
+        handleSaveButtonClick,
+        // used by other js:
         fetchAllSurveys,
-        surveySearch,
         selectSurvey,
-        showCriterionInfo,
-        // updateViewedOn,
-        resetSurveySearch,
-        setupCriterionInteractions,
-        createUniqueId,
-        createCriterionCard,
         clearSurveyResponses,
-        hideCriteriaList,
-        showCriteriaList,
+        debounceSaveSurvey,
+        enableSaveButtonState,
         setCriteriaEditable,
-        saveSurveyResponses,
         setupCriteriaInteraction,
+        // private functions:
+        // createSurveyCard,
+        // resetSurveySearch,
+        // showCriterionInfo,
+        // setupCriterionInteractions,
+        // createUniqueId,
+        // createCriterionCard,
+        // hideCriteriaList,
+        // surveySearch,
+        // showCriteriaList,
+        // saveSurveyResponses,
     };
 
 
 })();
-
-
-
-// // fetch all surveys on initial page load
-// document.addEventListener("DOMContentLoaded", SurveySelect.fetchAllSurveys);
-
-// // Initialize criteria interactions
-// document.addEventListener("DOMContentLoaded", () => {
-//     setupCriteriaInteraction();
-//     setCriteriaEditable(false); // Initially non-editable
-// });
-    
-    
