@@ -1,6 +1,7 @@
 <nav id="header-bar" class="col-12 sticky-bar mb-3">
     <div class="container d-flex d-flex-column justify-content-between mt-2 mb-2">
         <span>
+            <!-- About Button -->
             <button id="about-zinny-button" class="btn" src="/static/img/zinny-logo.png" title="Zinny Web UI" style="padding:0">
                 <img src="/static/img/zinny-logo.png" alt="Zinny Logo" style="height: 30px;">
                 <span style="margin-left: 0.75rem;"><strong>Zinny</strong></span>
@@ -9,6 +10,18 @@
 
         </span>
         <span id="action-group" class="d-flex" >
+            <!-- Save / Status Button -->
+            <button
+                id="save-ratings-button"
+                class="btn btn-secondary disabled"
+                data-bs-toggle="tooltip"
+                title="Save the current ratings to the db"
+                style="margin-left: 0.5rem;"
+                onclick="SurveySelect.handleSaveButtonClick()">
+                <i class="bi bi-save2"></i>
+                <span class="d-none d-sm-inline">No Title</span>
+            </button>
+            <!-- Save As / Export Dropdown Button -->
             <div class="dropdown">
                 <button id="download-button" class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"  data-bs-toggle="tooltip" title="Export to a file...">
                     <i class="bi bi-download"></i>
@@ -20,11 +33,7 @@
                     <li><button class="dropdown-item" id="download-tsv-current">TSV (Current)</button></li>
                 </ul>
             </div>
-            <!-- <span id="save-status" class="save-status">not saved</span> -->
-            <button id="save-ratings-button" class="btn btn-secondary was-btn-outline disabled" data-bs-toggle="tooltip" title="Save the current ratings to the db"  style="margin-left: 0.5rem;"">
-                <i class="bi bi-save2"></i>
-                <span class="d-none d-sm-inline">Save Ratings</span>
-            </button>
+            <!-- Help Button -->
             <button id="help-button" class="btn btn-outline-secondary" data-bs-toggle="tooltip" title="About" style="margin-left: 0.5rem;">
                 <i class="bi bi-question-lg"></i>
             </button>
@@ -51,8 +60,16 @@
                     </ul>
                 </p>
                 <p>
-                    Though we have not used IMDb data, IMDb is the gold standard for movie and TV data. Any correct release dates or spellings of titles are purely coincidental.
-                    Still, we should thank IMDb: Title information (in the world is probably all) courtesy of <a href="https://www.imdb.com" target="_blank">IMDb</a>. Used with permission.
+                    <section>
+                        Acknowledgements:
+                    <ul>
+                        <li><a href="https://flask.palletsprojects.com/en/1.1.x/">Flask</a> for the API framework.</li>
+                        <li><a href="https://getbootstrap.com/">Bootstrap</a> for the front-end styling.</li>
+                        <li><a href="https://www.pyinstaller.org/">PyInstaller</a> for building executables.</li>
+                        <li><a href="https://github.com/sveinbjornt/Platypus">Platypus</a> for creating macOS app bundles.</li>
+                        <li>Special thanks to <a href="https://www.imdb.com">IMDb</a> for being the standard reference for movie and TV data. While no IMDb data is used in our data, title information may coincide with their dataset.</li>
+                    </ul>
+                    </section>
                 </p>
             </div>
             <div class="modal-footer">
@@ -141,7 +158,7 @@ async function downloadRatings(format) {
             triggerDownload(blob, filename);
         }
     } catch (error) {
-        console.error("Error downloading ratings:", error);
+        console.error("zinny: Error downloading ratings:", error);
     }
 }
 
@@ -219,7 +236,7 @@ async function downloadAllTSVsAsZip() {
         const zipFilename = `zinny-all-surveys-${datestamp}.zip`;
         triggerDownload(zipBlob, zipFilename);
     } catch (error) {
-        console.error("Error downloading ZIP file:", error);
+        console.error("zinny: Error downloading ZIP file:", error);
     }
 }
 
