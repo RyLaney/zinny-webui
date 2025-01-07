@@ -91,23 +91,23 @@ const SurveySelect = (function() {
         }
     }
 
-
     async function selectSurvey(survey_id) {
         try {
             const surveyResponse = await fetch(`/api/v1/surveys/${survey_id}`);
             if (!surveyResponse.ok) {
                 throw new Error("Failed to fetch survey details");
             }
-    
             const surveyDetails = await surveyResponse.json();
             const surveyDefaults = surveyDetails.defaults || {};
+
+            // Apply defaults or override markers with survey or criterion values
             systemDefaultMarkers = {
                 "1": "Substandard",
                 "5": "Typical",
                 "10": "Exceptional",
             }
 
-            const criteria = JSON.parse(surveyDetails.criteria).map((criterion) => {
+            const criteria = surveyDetails.criteria.map((criterion) => {
                 // Apply defaults if markers are not explicitly set for the criterion
                 criterion.markers = criterion.markers || surveyDefaults.markers || systemDefaultMarkers;
                 return criterion;
@@ -148,10 +148,10 @@ const SurveySelect = (function() {
             state.ratings_changed = false; // No changes after loading
 
             state.score = calculateScore(state.ratings);
-            TitleSelect.updateScore(state.score);
 
             if (state.title_id) {
                 enableSaveButtonState(false, "loaded");
+                TitleSelect.updateScore(state.score);
             } else {
                 enableSaveButtonState(false, "no_title");
             }
@@ -330,6 +330,7 @@ const SurveySelect = (function() {
     }
 
     function createCriterionCard(criterion) {
+        console.log("criterion:", criterion)
         const template = document.getElementById("criterion-card-template");
         const card = template.content.cloneNode(true);
     
@@ -350,6 +351,9 @@ const SurveySelect = (function() {
         const minMarker = markers["1"] || "";
         const midMarker = markers["5"] || "";
         const maxMarker = markers["10"] || "";
+        console.log("minMarker:", minMarker)
+        console.log("midMarker:", midMarker)
+        console.log("maxMarker:", maxMarker)
 
         rangeLabels.innerHTML = `
             <span>${minMarker}</span>
