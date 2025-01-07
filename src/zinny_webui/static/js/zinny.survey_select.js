@@ -205,7 +205,7 @@ const SurveySelect = (function() {
                     <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"></path>
                 </svg>
             </span>
-            <input id="survey-search-input" type="text" class="form-control" placeholder="Search surveys" aria-label="Search Surveys" oninput="surveySearch()">
+            <input id="survey-search-input" type="text" class="form-control" placeholder="Search surveys" aria-label="Search Surveys" oninput="SurveySelect.handleSearchInput()">
             <button id="survey-filter-button" class="btn btn-secondary was-btn-outline bi bi-funnel" type="button" data-bs-toggle="collapse" data-bs-target="#survey-filter-options" aria-expanded="false" aria-controls="survey-filter-options"></button>
         `;
         surveysList.innerHTML = "";
