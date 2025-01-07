@@ -4,6 +4,8 @@
 ## What's the skinny on the ciné?
 Zinny Web UI provides a straightforward browser-based interface for rating films using surveys from [zinny-surveys](https://github.com/RyLaney/zinny-surveys). It connects to the Zinny API to manage surveys, ratings, and more.
 
+<img src="resources/zinny-webui-start_screen-opt.png" alt="Screenshot of Zinny App" width="320"/>
+
 ## Quickstart
 1. Clone the repository.
 2. Install the dependencies (see [SETUP.md](https://github.com/RyLaney/zinny-webui/blob/main/SETUP.md)).
