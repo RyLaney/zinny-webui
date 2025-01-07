@@ -19,6 +19,18 @@ Zinny Web UI provides a straightforward browser-based interface for rating films
 
 see [SETUP.md](SETUP.md)
 
+## Reference Material: Original Spreadsheet
+This repository includes the spreadsheet that inspired the design and goals of the zinny-survey specifications, zinny-api, and this user interface.
+
+About the Spreadsheet:
+Originally a standalone tool for evaluating and scoring, the spreadsheet served as a prototype for the Zinny.
+While the current specification builds upon and extends the spreadsheet's functionality, the original spreadsheet remains useful for those who prefer a traditional tabular interface.
+Where to Find It:
+The Excel version spreadsheet can be found in the reference/ directory of this repository, and there is a Google Sheets version available for copying and editing.
+- [Title Scoring VFX by Criteria - Example - Rev 2.1.xlsx](https://raw.githubusercontent.com/RyLaney/zinny-webui/main/reference/Title_Scoring_VFX_by_Criteria_-_Example_-_Rev_2.1.xlsx)
+- [Title Scoring VFX by Criteria - Example - Rev 2.1 (copy it)](https://docs.google.com/spreadsheets/d/1ts7XaVp_SuuMwpedFab30OoniZPI2b3wDEfh9uaoJJQ/copy?usp=sharing)
+- [Title Scoring VFX by Criteria - Example - Rev 2.1 (view only)](https://docs.google.com/spreadsheets/d/1ts7XaVp_SuuMwpedFab30OoniZPI2b3wDEfh9uaoJJQ/view?usp=sharing)
+
 
 ## Contributing
 We welcome contributions! If you'd like to report an issue, suggest a feature, or contribute code, please check the [CONTRIBUTING.md](https://github.com/RyLaney/zinny-webui/blob/main/CONTRIBUTING.md) file for guidelines.
