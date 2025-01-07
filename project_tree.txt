@@ -1,30 +1,47 @@
-zinny-webui
+.
 ├── CONTRIBUTING.md
 ├── LICENSE
+├── Makefile
 ├── README.md
-├── environment-dev.yml
+├── SETUP.md
 ├── environment.yml
+├── platypus
+│   └── zinny-launch-webui.bash
 ├── project_tree.txt
 ├── pyinstaller
 │   ├── hooks
+│   │   ├── hook-zinny_api.py
+│   │   └── hook-zinny_surveys.py
 │   └── spec_files
+│       ├── pyinstaller
+│       ├── test.spec
+│       └── zinny-webui.spec
 ├── pyproject.toml
 ├── pytest.ini
-├── requirements-dev.txt
+├── reference
+│   └── Title_Scoring_VFX_by_Criteria_-_Example_-_Rev_2.1.xlsx
 ├── requirements.txt
-├── setup.py
+├── resources
+│   ├── favicon.ico
+│   ├── icon.icns
+│   ├── zinny-icon-64.png
+│   └── zinny-webui-start_screen-opt.png
 ├── src
 │   ├── main.py
-│   ├── zinny.egg-info
-│   │   ├── PKG-INFO
-│   │   ├── SOURCES.txt
-│   │   ├── dependency_links.txt
-│   │   ├── entry_points.txt
-│   │   ├── requires.txt
-│   │   └── top_level.txt
 │   └── zinny_webui
 │       ├── __init__.py
+│       ├── cli.py
 │       ├── config.py
+│       ├── data
+│       │   ├── title_types
+│       │   │   ├── local
+│       │   │   └── shared
+│       │   │       └── title_types.json
+│       │   └── titles
+│       │       ├── local
+│       │       └── shared
+│       │           ├── titles_default.json
+│       │           └── titles_sample_file.tsv
 │       ├── routes
 │       │   ├── __init__.py
 │       │   └── errors.py
@@ -33,14 +50,16 @@ zinny-webui
 │       │   │   ├── bootstrap-*
 │       │   │   ├── fonts
 │       │   │   └── styles.css
-│       │   ├── js
-│       │   │   ├── bootstrap.*.js
-│       │   │   ├── jszip.min.js
-│       │   │   ├── zinny.common.js
-│       │   │   ├── zinny.header_bar.js
-│       │   │   ├── zinny.screen_select.js
-│       │   │   ├── zinny.survey_select.js
-│       │   │   └── zinny.title_select.js
+│       │   ├── favicon.ico
+│       │   ├── img
+│       │   │   └── zinny-logo.png
+│       │   └── js
+│       │       ├── jszip.min.js
+│       │       ├── zinny.common.js
+│       │       ├── zinny.header_bar.js
+│       │       ├── zinny.screen_select.js
+│       │       ├── zinny.survey_select.js
+│       │       └── zinny.title_select.js
 │       ├── templates
 │       │   ├── 404.html
 │       │   ├── 500.html
@@ -60,11 +79,12 @@ zinny-webui
 │           ├── about.py
 │           ├── base.py
 │           └── survey.py
-├── tests
-│   ├── __init__.py
-│   ├── data_samples.py
-│   ├── test_init.py
-│   ├── test_views.py
-│   └── util_db_helpers.py
-├── zinny-webui.py
-└── zinny_app.code-workspace
+├── test.spec
+└── tests
+    ├── __init__.py
+    ├── data_samples.py
+    ├── test_init.py
+    ├── test_views.py
+    └── util_db_helpers.py
+
+29 directories, 58 files
