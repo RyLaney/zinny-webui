@@ -26,7 +26,7 @@ def get_package_version(package_name):
     try:
         return version(package_name)
     except PackageNotFoundError:
-        return "unknown"
+        return "0.0.0"
 
 # Retrieve version numbers
 ZINNY_API_VERSION = get_package_version("zinny-api")
