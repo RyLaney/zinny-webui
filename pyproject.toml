@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "zinny-webui"
-version = "0.1.22"
+version = "0.1.26"
 description = "A Web UI for rating Motion Picture titles. Uses Zinny API"
 authors = [
     { name = "Ryan Laney" }
