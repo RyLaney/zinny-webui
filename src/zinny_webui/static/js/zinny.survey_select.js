@@ -99,6 +99,7 @@ const SurveySelect = (function() {
             }
             const surveyDetails = await surveyResponse.json();
             const surveyDefaults = surveyDetails.defaults || {};
+            const surveyDefaultMarkers = surveyDefaults.markers || {};
 
             // Apply defaults or override markers with survey or criterion values
             systemDefaultMarkers = {
@@ -109,7 +110,7 @@ const SurveySelect = (function() {
 
             const criteria = surveyDetails.criteria.map((criterion) => {
                 // Apply defaults if markers are not explicitly set for the criterion
-                criterion.markers = criterion.markers || surveyDefaults.markers || systemDefaultMarkers;
+                criterion.markers = criterion.markers || surveyDefaultMarkers || systemDefaultMarkers;
                 return criterion;
             });
             const survey_name = surveyDetails.name;
@@ -330,7 +331,6 @@ const SurveySelect = (function() {
     }
 
     function createCriterionCard(criterion) {
-        console.log("criterion:", criterion)
         const template = document.getElementById("criterion-card-template");
         const card = template.content.cloneNode(true);
     
@@ -351,9 +351,6 @@ const SurveySelect = (function() {
         const minMarker = markers["1"] || "";
         const midMarker = markers["5"] || "";
         const maxMarker = markers["10"] || "";
-        console.log("minMarker:", minMarker)
-        console.log("midMarker:", midMarker)
-        console.log("maxMarker:", maxMarker)
 
         rangeLabels.innerHTML = `
             <span>${minMarker}</span>
