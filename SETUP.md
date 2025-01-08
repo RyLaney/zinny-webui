@@ -2,14 +2,22 @@
 
 Zinny-webui is the frontend interface for interacting with the Zinny system. It depends on `zinny-api` to provide backend services.
 
-## Prerequisites
+## Easy-peasy Pip Install and run
+```bash
+pip install zinny-webui
+zinny-webui
+```
+
+## Development / Python Installation
+
+
+### Prerequisites
 - Python 3.8 or later
 - `zinny-api`
 - `zinny-surveys` 
   
 `zinny-api` and `zinny-surveys` are in requirements.txt, no extra installation is needed.
 
-## Installation
 
 ### Clone the Repository
 1. Clone the repository:
@@ -54,3 +62,22 @@ Example:
    ```bash
    python zinny-webui.py --port 7219 --no-launch-browser
    ```
+
+
+## Binaries
+The current release includs a binary and App bundle for MacOS. Download the appropriate binary from the [releases page]
+
+### Verifying the File Integrity
+1. Download the executable and its corresponding `.sha256` checksum file.
+2. Verify the checksum:
+   - On Linux/macOS:
+     ```bash
+     shasum -c zinny-launch-webui-v0-1-26-x86
+     shasum -c Zinny\ Launch\ WebUI.dmg.sha256.sha256
+     ```
+   - On Windows (PowerShell):
+     ```powershell
+     Get-FileHash your-file.ext -Algorithm SHA256 | Format-Table
+     ```
+3. Ensure the output matches the checksum provided in the `.sha256` file.
+
